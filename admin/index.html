@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>لوحة التحكم - EL Samurai</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Cairo', sans-serif;
+      background-color: #111;
+      color: white;
+      padding: 20px;
+    }
+    h1 {
+      color: #0ff;
+    }
+    label {
+      display: block;
+      margin: 10px 0 5px;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      border: none;
+      border-radius: 8px;
+      margin-bottom: 10px;
+    }
+    button {
+      background-color: #0ff;
+      color: #000;
+      font-weight: bold;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+    .preview {
+      margin-top: 20px;
+    }
+    .preview div {
+      background: #222;
+      border-radius: 10px;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+
+<h1>📌 لوحة التحكم: إضافة خدمة جديدة</h1>
+
+<form id="addServiceForm">
+  <label>📌 العنوان</label>
+  <input type="text" id="title" required>
+
+  <label>🖼️ رابط الصورة</label>
+  <input type="url" id="image" placeholder="https://example.com/image.jpg" required>
+
+  <label>📝 الوصف</label>
+  <textarea id="desc" rows="3" required></textarea>
+
+  <label>🔗 الرابط</label>
+  <input type="url" id="link" placeholder="https://t.me/..." required>
+
+  <button type="submit">➕ إضافة الخدمة</button>
+</form>
+
+<div class="preview" id="preview"></div>
+
+<script>
+  const form = document.getElementById('addServiceForm');
+  const preview = document.getElementById('preview');
+
+  const services = JSON.parse(localStorage.getItem('services') || '[]');
+
+  function renderPreview() {
+    preview.innerHTML = '';
+    services.forEach(service => {
+      preview.innerHTML += `
+        <div>
+          <img src="${service.image}" alt="${service.title}" style="width:100%; border-radius:10px; max-height:180px; object-fit:cover;">
+          <h3>${service.title}</h3>
+          <p>${service.desc}</p>
+          <a href="${service.link}" target="_blank" style="color:#0ff;">رابط الخدمة</a>
+        </div>
+      `;
+    });
+  }
+
+  renderPreview();
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const newService = {
+      title: title.value,
+      image: image.value,
+      desc: desc.value,
+      link: link.value
+    };
+    services.push(newService);
+    localStorage.setItem('services', JSON.stringify(services));
+    form.reset();
+    renderPreview();
+  });
+</script>
+
+</body>
+</html>
